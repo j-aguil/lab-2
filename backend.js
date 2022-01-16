@@ -1,4 +1,5 @@
 const express = require('express');
+const { del } = require('express/lib/application');
 const app = express();
 const port = 5000;
 
@@ -63,8 +64,7 @@ app.get('/users', (req, res) => {
         let result = findUserByName(name);
         result = {users_list: result};
         res.send(result);
-    }
-    else{
+    } else{
         res.send(users);
     }
 });
@@ -73,11 +73,54 @@ const findUserByName = (name) => {
     return users['users_list'].filter( (user) => user['name'] === name); 
 }
 
-//
+//part 7 - second change
+//-----
+//gets users with given job
+//still need to add condition for filtering a given name and a given job 
+app.get('/users', (req, res) => {
+    const job = req.query.job;
+    if(job != undefined) {
+        let result = findUserByJob(job)
+        result = {users_list: result};
+        res.send(result);
+    } else{
+        res.send(users);
+    }
+});
 
-// app.get('/users', (req, res) => {
-//     res.send(users);
-// });
+const findUserByJob = (job) => {
+    return users['users_list'].filter( (user) => user['job'] === job);
+}
+//-----
+
+app.post('/users', (req, res) => {
+    const userToAdd = req.body;
+    addUser(userToAdd);
+    res.status(200).end();
+});
+
+function addUser(user){
+    users['users_list'].push(user);
+}
+
+
+//delete user
+//------
+app.delete('/users', (req, res) => {
+    const userToDelete = req.body;
+    delUser(userToDelete);
+    res.status(200).end();
+})
+
+function delUser(user){
+    users['users_list'].reduce(user);
+}
+//------
+
+
+app.get('/users', (req, res) => {
+    res.send(users);
+});
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
