@@ -3,6 +3,10 @@ const { del } = require('express/lib/application');
 const app = express();
 const port = 5000;
 
+const cors = require('cors');
+
+
+
 const users = { 
     users_list :
     [
@@ -35,17 +39,19 @@ const users = {
  }
 
 
+app.use(cors());
 app.use(express.json());
 
-// app.get('/', (req, res) => {
-//     res.send('Hello World!');
-// });
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
 
 app.get('/users/:id', (req, res) => {
     const id = req.params['id']; //or req.params.id
     let result = findUserById(id);
-    if(result === undefined || result.length == 0)
+    if(result === undefined || result.length == 0){
         res.status(404).send('Resource not found.');
+    }
     else {
         result = {users_list: result};
         res.send(result);
@@ -64,7 +70,7 @@ app.get('/users', (req, res) => {
         let result = findUserByName(name);
         result = {users_list: result};
         res.send(result);
-    } else{
+    } else {
         res.send(users);
     }
 });
@@ -77,26 +83,26 @@ const findUserByName = (name) => {
 //-----
 //gets users with given job
 //still need to add condition for filtering a given name and a given job 
-app.get('/users', (req, res) => {
-    const job = req.query.job;
-    if(job != undefined) {
-        let result = findUserByJob(job)
-        result = {users_list: result};
-        res.send(result);
-    } else{
-        res.send(users);
-    }
-});
+// app.get('/users', (req, res) => {
+//     const job = req.query.job;
+//     if(job != undefined) {
+//         let result = findUserByJob(job)
+//         result = {users_list: result};
+//         res.send(result);
+//     } else {
+//         res.send(users);
+//     }
+// });
 
-const findUserByJob = (job) => {
-    return users['users_list'].filter( (user) => user['job'] === job);
-}
+// const findUserByJob = (job) => {
+//     return users['users_list'].filter( (user) => user['job'] === job);
+// }
 //-----
 
 app.post('/users', (req, res) => {
     const userToAdd = req.body;
     addUser(userToAdd);
-    res.status(200).end();
+    res.status(201).end();
 });
 
 function addUser(user){
@@ -106,15 +112,15 @@ function addUser(user){
 
 //delete user
 //------
-app.delete('/users', (req, res) => {
-    const userToDelete = req.body;
-    delUser(userToDelete);
-    res.status(200).end();
-})
+// app.delete('/users', (req, res) => {
+//     const userToDelete = req.body;
+//     delUser(userToDelete);
+//     res.status(200).end();
+// })
 
-function delUser(user){
-    users['users_list'].reduce(user);
-}
+// function delUser(user){
+//     users['users_list'].reduce(user);
+// }
 //------
 
 
