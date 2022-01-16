@@ -66,11 +66,17 @@ function findUserById(id){
 
 app.get('/users', (req, res) => {
     const name = req.query.name;
-    if (name != undefined){
+    const job = req.query.job;
+    if (name != undefined && job != undefined){
+        let result = findUserByNameAndJob(name, job);
+        result = {users_list: result};
+        res.send(result);
+    } else if(name != undefined && job == undefined){
         let result = findUserByName(name);
         result = {users_list: result};
         res.send(result);
-    } else {
+    } 
+    else {
         res.send(users);
     }
 });
@@ -81,46 +87,55 @@ const findUserByName = (name) => {
 
 //part 7 - second change
 //-----
-//gets users with given job
-//still need to add condition for filtering a given name and a given job 
-// app.get('/users', (req, res) => {
-//     const job = req.query.job;
-//     if(job != undefined) {
-//         let result = findUserByJob(job)
-//         result = {users_list: result};
-//         res.send(result);
-//     } else {
-//         res.send(users);
-//     }
-// });
+//gets users with given name and job
+const findUserByNameAndJob = (name , job) => { 
+    return users['users_list'].filter( (user) => user['name'] === name && user['job'] === job); 
+}
 
-// const findUserByJob = (job) => {
-//     return users['users_list'].filter( (user) => user['job'] === job);
-// }
-//-----
 
 app.post('/users', (req, res) => {
+    req.body.id = generateId;
+
     const userToAdd = req.body;
     addUser(userToAdd);
     res.status(201).end();
 });
 
+
 function addUser(user){
     users['users_list'].push(user);
 }
 
+//part 6 - #2
+//generate random ID
+function generateId(){
+    let Id = "";
 
-//delete user
+    let chars = "abcdefghijklmnopqrstuvwxyz";
+
+    //generates the random first 3 letters
+    for (let i = 0; i < 3; i++){
+        Id += chars.charAt(Math.floor(Math.random() * chars.length));
+    };
+
+    //generates random 3 digit number to add onto the end of ID
+    Id += Math.floor(Math.random() * (999 - 100) + 100);
+
+    return Id;
+}
+
+
+//part 7 delete user
 //------
-// app.delete('/users', (req, res) => {
-//     const userToDelete = req.body;
-//     delUser(userToDelete);
-//     res.status(200).end();
-// })
+app.delete('/users', (req, res) => {
+    const userToDelete = req.body;
+    delUser(userToDelete);
+    res.status(200).end();  //change status
+})
 
-// function delUser(user){
-//     users['users_list'].reduce(user);
-// }
+function delUser(user){
+    users['users_list'].reduce(user);
+}
 //------
 
 
