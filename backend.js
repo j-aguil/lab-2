@@ -28,7 +28,7 @@ const users = {
        {
           id: 'yat999', 
           name: 'Dee',
-          job: 'Aspring actress',
+          job: 'Aspiring actress',
        },
        {
           id: 'zap555', 
@@ -126,7 +126,7 @@ function generateId(){
     Id += Math.floor(Math.random() * (999 - 100) + 100);
 
     //test ID creation
-    console.log(Id);
+    // console.log(Id);
     return Id;
 }
 //-----
@@ -136,7 +136,9 @@ function generateId(){
 //------
 
 app.delete('/users/:id', (req, res) => {
-    const userToDelete = req.body;
+
+    const userToDelete = req.params['id']; //or req.params.id
+    
 
     if(userToDelete === undefined || userToDelete.length == 0){
         res.status(404).send('resource not found.');
@@ -147,8 +149,8 @@ app.delete('/users/:id', (req, res) => {
     }
 })
 
-function delUser(user){
-    users['users_list'].splice(user, 1);
+function delUser(userToDelete){
+    users['users_list'] = users['users_list'].filter((user) => user['id'] !== userToDelete);
 }
 //------
 
