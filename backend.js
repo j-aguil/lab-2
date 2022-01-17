@@ -125,6 +125,7 @@ function generateId(){
     //generates random 3 digit number to add onto the end of ID
     Id += Math.floor(Math.random() * (999 - 100) + 100);
 
+    //test ID creation
     console.log(Id);
     return Id;
 }
