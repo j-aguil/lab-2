@@ -6,7 +6,6 @@ const port = 5000;
 const cors = require('cors');
 
 
-
 const users = { 
     users_list :
     [
@@ -150,7 +149,7 @@ app.delete('/users/:id', (req, res) => {
 })
 
 function delUser(userToDelete){
-    users['users_list'] = users['users_list'].filter((user) => user['id'] !== userToDelete);
+    users['users_list'] = users['users_list'].filter( (user) => user['id'] !== userToDelete);
 }
 //------
 
